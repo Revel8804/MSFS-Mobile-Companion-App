@@ -8,6 +8,7 @@ import socket
 import asyncio
 from threading import Thread
 import datetime
+import re
 
 print (socket.gethostbyname(socket.gethostname()))
 
@@ -112,6 +113,11 @@ def flask_thread_func(threadname):
     
     
     app.run(host='0.0.0.0', port=4000, debug=False)
+
+def decoderring(todecode):
+    todecode = todecode.decode('utf-8')
+    return todecode
+    
 
 # SimConnect  App
 def simconnect_thread_func(threadname):
@@ -232,11 +238,14 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["GPS_WP_PREV_LON"] = await aq.get("GPS_WP_PREV_LON")
         ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_INDEX"] = await aq.get("GPS_FLIGHT_PLAN_WP_INDEX")
         ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_COUNT"] = await aq.get("GPS_FLIGHT_PLAN_WP_COUNT")
-        GPS_WP_NEXT_ID = await aq.get("GPS_WP_NEXT_ID")
-        GPS_WP_PREV_ID = await aq.get("GPS_WP_PREV_ID")
+        NEXTID = await aq.get("GPS_WP_NEXT_ID")
+        PREVID = await aq.get("GPS_WP_PREV_ID")
         ui_friendly_dictionary["GPS_TARGET_DISTANCE"] = await aq.get("GPS_TARGET_DISTANCE")
-        ui_friendly_dictionary["AI_WAYPOINT_LIST"] = aq.get("AI_WAYPOINT_LIST")
-        
+        GPS_WP_NEXT_ID = decoderring(NEXTID)
+        GPS_WP_PREV_ID = decoderring(PREVID)
+        ui_friendly_dictionary["GPS_WP_NEXT_ID"] = GPS_WP_NEXT_ID
+        ui_friendly_dictionary["GPS_WP_PREV_ID"] = GPS_WP_PREV_ID
+
         # XPNDR
         xpndr_bcd = await aq.get("TRANSPONDER_CODE:1")
         xpndr_digits = ""
