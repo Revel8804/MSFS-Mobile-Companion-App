@@ -232,10 +232,10 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["GPS_WP_PREV_LON"] = await aq.get("GPS_WP_PREV_LON")
         ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_INDEX"] = await aq.get("GPS_FLIGHT_PLAN_WP_INDEX")
         ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_COUNT"] = await aq.get("GPS_FLIGHT_PLAN_WP_COUNT")
-        ui_friendly_dictionary["GPS_WP_NEXT_ID"] = await aq.get("GPS_WP_NEXT_ID")
-        ui_friendly_dictionary["GPS_WP_PREV_ID"] = await aq.get("GPS_WP_PREV_ID")
+        GPS_WP_NEXT_ID = await aq.get("GPS_WP_NEXT_ID")
+        GPS_WP_PREV_ID = await aq.get("GPS_WP_PREV_ID")
         ui_friendly_dictionary["GPS_TARGET_DISTANCE"] = await aq.get("GPS_TARGET_DISTANCE")
-        ui_friendly_dictionary["AI_WAYPOINT_LIST"] = await aq.get("AI_WAYPOINT_LIST")
+        ui_friendly_dictionary["AI_WAYPOINT_LIST"] = aq.get("AI_WAYPOINT_LIST")
         
         # XPNDR
         xpndr_bcd = await aq.get("TRANSPONDER_CODE:1")
