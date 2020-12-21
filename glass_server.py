@@ -217,7 +217,26 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["COM2_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)
         ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
         ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
-        
+
+        # Waypoints
+        ui_friendly_dictionary["GPS_IS_ACTIVE_FLIGHT_PLAN"] = await aq.get("GPS_IS_ACTIVE_FLIGHT_PLAN")
+        ui_friendly_dictionary["GPS_IS_ACTIVE_WAY_POINT"] = await aq.get("GPS_IS_ACTIVE_WAY_POINT")
+        ui_friendly_dictionary["GPS_WP_DISTANCE"] = await aq.get("GPS_WP_DISTANCE")
+        ui_friendly_dictionary["GPS_WP_CROSS_TRK"] = await aq.get("GPS_WP_CROSS_TRK")
+        ui_friendly_dictionary["GPS_WP_DESIRED_TRACK"] = await aq.get("GPS_WP_DESIRED_TRACK")
+        ui_friendly_dictionary["GPS_ETA"] = await aq.get("GPS_ETA")
+        ui_friendly_dictionary["GPS_WP_NEXT_LAT"] = await aq.get("GPS_WP_NEXT_LAT")
+        ui_friendly_dictionary["GPS_WP_NEXT_LON"] = await aq.get("GPS_WP_NEXT_LON")
+        ui_friendly_dictionary["GPS_WP_PREV_VALID"] = await aq.get("GPS_WP_PREV_VALID")
+        ui_friendly_dictionary["GPS_WP_PREV_LAT"] = await aq.get("GPS_WP_PREV_LAT")
+        ui_friendly_dictionary["GPS_WP_PREV_LON"] = await aq.get("GPS_WP_PREV_LON")
+        ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_INDEX"] = await aq.get("GPS_FLIGHT_PLAN_WP_INDEX")
+        ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_COUNT"] = await aq.get("GPS_FLIGHT_PLAN_WP_COUNT")
+        ui_friendly_dictionary["GPS_WP_NEXT_ID"] = await aq.get("GPS_WP_NEXT_ID")
+        ui_friendly_dictionary["GPS_WP_PREV_ID"] = await aq.get("GPS_WP_PREV_ID")
+        ui_friendly_dictionary["GPS_TARGET_DISTANCE"] = await aq.get("GPS_TARGET_DISTANCE")
+        ui_friendly_dictionary["AI_WAYPOINT_LIST"] = await aq.get("AI_WAYPOINT_LIST")
+
         # XPNDR
         xpndr_bcd = await aq.get("TRANSPONDER_CODE:1")
         xpndr_digits = ""
