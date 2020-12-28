@@ -4,8 +4,17 @@
 				<div id = "map" style = "height: 100%; width: 100%;"></div>
 			</div>
 		</div>
-		<div class="btn-group" role="group" aria-label="Map controls" style="position:relative;z-index:2;top:-3px;">
-			<button id="followModeButton" type="button" class="btn btn-primary btn-sm" onclick="toggleFollowPlane();$(this).blur();"><span id=followMode>Unfollow Plane</span></button>
-			<button id="GPStrackButton" type="button" class="btn btn-primary btn-sm" onclick="toggleGPStrack();$(this).blur();">GPS Track</button>
+		<div class="col" style="top: -35px;">
+			<div class="row">
+				<div class="btn-group" role="group" aria-label="Map controls" style="position:relative;z-index:2;top:-3px;">
+					<button type="button" class="btn btn-primary btn-sm" style="opacity:1" disabled><span id="gps-wp-distance">?</span></button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="btn-group" role="group" aria-label="Map controls" style="position:relative;z-index:2;top:-3px;">
+					<button id="followModeButton" type="button" class="btn btn-primary btn-sm" onclick="toggleFollowPlane();$(this).blur();"><span id=followMode>Unfollow Plane</span></button>
+					<button id="GPStrackButton" type="button" class="btn btn-primary btn-sm" onclick="toggleGPStrack();$(this).blur();">GPS Track</button>
+				</div>
+			</div>
 		</div>
 	</div>

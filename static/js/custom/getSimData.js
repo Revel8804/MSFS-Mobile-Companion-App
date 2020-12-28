@@ -784,6 +784,9 @@ function displayData() {
 	$("#landing-vs3").text(landing_vs3);
 	$("#landing-t3").text(landing_t3);
 	$("#sim-rate").text(sim_rate);
+
+	//Waypoint
+	$("#gps-wp-distance").text("Distance to next waypoint" + " "+ "=" + " " + gps_wp_distance);
 }
 
 function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText="Off") {

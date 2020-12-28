@@ -245,6 +245,11 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["GPS_WP_NEXT_ID"] = GPS_WP_NEXT_ID
         ui_friendly_dictionary["GPS_WP_PREV_ID"] = GPS_WP_PREV_ID
         ui_friendly_dictionary["AI_WAYPOINT_LIST"] = aq.get("AI_WAYPOINT_LIST")
+        TITLE = aq.get("TITLE")
+        # CURRENT_FLIGHT = aq.get("CURRENT_FLIGHT")
+        # CURRENT_FLIGHT = aq.get("CURRENT_FLIGHT")
+        # CURRENT_FLIGHT = aq.get("CURRENT_FLIGHT")
+        # print(GPS_WP_NEXT_ID)
 
         # XPNDR
         xpndr_bcd = await aq.get("TRANSPONDER_CODE:1")
