@@ -103,7 +103,23 @@ let light_recognition;
 let pitot_heat;
 let eng_anti_ice;
 let structural_deice;
-
+let gps_is_active_flight_plan;
+let gps_is_active_way_point;
+let gps_wp_distance;
+let gps_wp_cross_trk;
+let gps_wp_desired_track;
+let gps_eta;
+let gps_wp_next_lat;
+let gps_wp_next_lon;
+let gps_wp_prev_valid;
+let gps_wp_prev_lat;
+let gps_wp_prev_lon;
+let gps_flight_plan_wp_index;
+let gps_flight_plan_wp_count;
+let gps_wp_next_id;
+let gps_wp_prev_id;
+let gps_target_distance;
+// let title;
 // Maps Size Fix Function
 let map_size_fix;
 let map_size_fix_mod;
@@ -683,6 +699,25 @@ function getSimulatorData() {
 		landing_vs3 = data.LANDING_VS3;
 		landing_t3 = data.LANDING_T3;
 		sim_rate = data.SIMULATION_RATE;
+		
+		//Waypoints
+		gps_is_active_flight_plan = data.GPS_IS_ACTIVE_FLIGHT_PLAN;
+        gps_is_active_way_point = data.GPS_IS_ACTIVE_WAY_POINT;
+        gps_wp_distance = data.GPS_WP_DISTANCE;
+        gps_wp_cross_trk = data.GPS_WP_CROSS_TRK;
+        gps_wp_desired_track = data.GPS_WP_DESIRED_TRACK;
+        gps_eta = data.GPS_ETA;
+        gps_wp_next_lat = data.GPS_WP_NEXT_LAT;
+        gps_wp_next_lon = data.GPS_WP_NEXT_LON;
+        gps_wp_prev_valid = data.GPS_WP_PREV_VALID;
+        gps_wp_prev_lat = data.GPS_WP_PREV_LAT;
+        gps_wp_prev_lon = data.GPS_WP_PREV_LON;
+        gps_flight_plan_wp_index = data.GPS_FLIGHT_PLAN_WP_INDEX;
+        gps_flight_plan_wp_count = data.GPS_FLIGHT_PLAN_WP_COUNT;
+        gps_wp_next_id = data.GPS_WP_NEXT_ID;
+        gps_wp_prev_id = data.GPS_WP_PREV_ID;
+        gps_target_distance = data.GPS_TARGET_DISTANCE;
+		// title = data.TITLE;
     });
     return false;
 }
@@ -758,6 +793,10 @@ function displayData() {
 	$("#landing-vs3").text(landing_vs3);
 	$("#landing-t3").text(landing_t3);
 	$("#sim-rate").text(sim_rate);
+
+	//Waypoint
+	$("#gps-wp-distance").text(gps_wp_distance);
+
 }
 
 function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText="Off") {
