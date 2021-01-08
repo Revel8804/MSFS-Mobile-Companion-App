@@ -68,6 +68,8 @@ let autopilot_flight_director_active;
 let autopilot_airspeed_hold;
 let autopilot_airspeed_hold_var;
 let airspeed_indicated;
+let autopilot_loc_mode;
+let autopilot_appr_mode;
 
 let gear_handle_position;
 let elevator_trim_pct;
@@ -101,24 +103,6 @@ let light_recognition;
 let pitot_heat;
 let eng_anti_ice;
 let structural_deice;
-
-let gps_is_active_flight_plan;
-let gps_is_active_way_point;
-let gps_wp_distance;
-let gps_wp_cross_trk;
-let gps_wp_desired_track;
-let gps_eta;
-let gps_wp_next_lat;
-let gps_wp_next_lon;
-let gps_wp_prev_valid;
-let gps_wp_prev_lat;
-let gps_wp_prev_lon;
-let gps_flight_plan_wp_index;
-let gps_flight_plan_wp_count;
-let gps_wp_next_id;
-let gps_wp_prev_id;
-let gps_target_distance;
-let ai_waypoint_list;
 
 // Maps Size Fix Function
 let map_size_fix;
@@ -655,6 +639,8 @@ function getSimulatorData() {
         autopilot_airspeed_hold = data.AUTOPILOT_FLIGHT_LEVEL_CHANGE;
         autopilot_airspeed_hold_var = data.AUTOPILOT_AIRSPEED_HOLD_VAR;
         airspeed_indicated = data.AIRSPEED_INDICATED;
+		autopilot_loc_mode = data.AUTOPILOT_LOC_MODE;
+		autopilot_appr_mode = data.AUTOPILOT_APPR_MODE;
 		
 		//NAV
 		nav1_obs_deg = Number(data.NAV1_OBS_DEG);
@@ -697,25 +683,6 @@ function getSimulatorData() {
 		landing_vs3 = data.LANDING_VS3;
 		landing_t3 = data.LANDING_T3;
 		sim_rate = data.SIMULATION_RATE;
-
-		//Waypoints
-		gps_is_active_flight_plan = data.GPS_IS_ACTIVE_FLIGHT_PLAN;
-        gps_is_active_way_point = data.GPS_IS_ACTIVE_WAY_POINT;
-        gps_wp_distance = data.GPS_WP_DISTANCE;
-        gps_wp_cross_trk = data.GPS_WP_CROSS_TRK;
-        gps_wp_desired_track = data.GPS_WP_DESIRED_TRACK;
-        gps_eta = data.GPS_ETA;
-        gps_wp_next_lat = data.GPS_WP_NEXT_LAT;
-        gps_wp_next_lon = data.GPS_WP_NEXT_LON;
-        gps_wp_prev_valid = data.GPS_WP_PREV_VALID;
-        gps_wp_prev_lat = data.GPS_WP_PREV_LAT;
-        gps_wp_prev_lon = data.GPS_WP_PREV_LON;
-        gps_flight_plan_wp_index = data.GPS_FLIGHT_PLAN_WP_INDEX;
-        gps_flight_plan_wp_count = data.GPS_FLIGHT_PLAN_WP_COUNT;
-        gps_wp_next_id = data.GPS_WP_NEXT_ID;
-        gps_wp_prev_id = data.GPS_WP_PREV_ID;
-        gps_target_distance = data.GPS_TARGET_DISTANCE;
-		ai_waypoint_list = data.AI_WAYPOINT_LIST;
     });
     return false;
 }
@@ -735,28 +702,35 @@ function displayData() {
     checkAndUpdateButton("#autopilot-vertical-hold", autopilot_vertical_hold);
     checkAndUpdateButton("#autopilot-autothrottle", autopilot_autothrottle);
     checkAndUpdateButton("#autopilot-glideslope-hold", autopilot_glideslope_hold);
-    checkAndUpdateButton("#com1-transmit", com1_transmit, "COM 1", "COM 1");
-    checkAndUpdateButton("#com2-transmit", com2_transmit, "COM 2", "COM 2");
-    checkAndUpdateButton("#com1-transmit-direct", com1_transmit, "Transmit COM 1", "Transmit COM 1");
-    checkAndUpdateButton("#com2-transmit-direct", com2_transmit, "Transmit COM 2", "Transmit COM 2");
-    checkAndUpdateButton("#light-beacon", light_beacon, "Beacon", "Beacon");
-    checkAndUpdateButton("#light-landing", light_landing, "Landing", "Landing");
-    checkAndUpdateButton("#light-taxi", light_taxi, "Taxi", "Taxi");
-    checkAndUpdateButton("#light-nav", light_nav, "NAV", "NAV");
-    checkAndUpdateButton("#light-strobe", light_strobe, "Strobe", "Strobe");
-    checkAndUpdateButton("#light-logo", light_logo, "Logo", "Logo");
-    checkAndUpdateButton("#light-recognition", light_recognition, "Recognition", "Recognition");
-    checkAndUpdateButton("#light-wings", light_wing, "Wings", "Wings");
-    checkAndUpdateButton("#light-cabin", light_cabin, "Cabin", "Cabin");
-    checkAndUpdateButton("#light-panel", light_panel, "Panel", "Panel");
-    checkAndUpdateButton("#pitot-heat", pitot_heat, "Pitot Heat", "Pitot Heat");
-    checkAndUpdateButton("#anti-ice", eng_anti_ice, "General Anti-Ice", "General Anti-Ice");
-    checkAndUpdateButton("#structural-deice", structural_deice, "Structural Deice", "Structural Deice");
+    checkAndUpdateButton("#com1-transmit", com1_transmit, "COM 1 (On)", "COM 1 (Off)");
+    checkAndUpdateButton("#com2-transmit", com2_transmit, "COM 2 (On)", "COM 2 (Off)");
+    checkAndUpdateButton("#com1-transmit-direct", com1_transmit, "Transmit COM 1 (On)", "Transmit COM 1 (Off)");
+    checkAndUpdateButton("#com2-transmit-direct", com2_transmit, "Transmit COM 2 (On)", "Transmit COM 2 (Off)");
+    checkAndUpdateButton("#light-beacon", light_beacon);
+    checkAndUpdateButton("#light-landing", light_landing);
+    checkAndUpdateButton("#light-taxi", light_taxi);
+    checkAndUpdateButton("#light-nav", light_nav);
+    checkAndUpdateButton("#light-strobe", light_strobe);
+    checkAndUpdateButton("#light-logo", light_logo);
+    checkAndUpdateButton("#light-recognition", light_recognition);
+    checkAndUpdateButton("#light-wings", light_wing);
+    checkAndUpdateButton("#light-cabin", light_cabin);
+    checkAndUpdateButton("#light-panel", light_panel);
+    checkAndUpdateButton("#pitot-heat", pitot_heat, "Pitot Heat (On)", "Pitot Heat (Off)");
+    checkAndUpdateButton("#anti-ice", eng_anti_ice, "General Anti-Ice (On)", "General Anti-Ice (Off)");
+    checkAndUpdateButton("#structural-deice", structural_deice, "Structural Deice (On)", "Structural Deice (Off)");
+	checkAndUpdateButton("#a320-autothrottle", autopilot_autothrottle);
+	checkAndUpdateButton("#a320-loc-ap", autopilot_loc_mode);
+	checkAndUpdateButton("#a320-appr-ap", autopilot_appr_mode);
 	
     $("#autopilot-heading-lock-dir").attr('placeholder', autopilot_heading_lock_dir);
     $("#autopilot-altitude-lock-var").attr('placeholder', autopilot_altitude_lock_var);
     $("#autopilot-airspeed-hold-var").attr('placeholder', autopilot_airspeed_hold_var);
     $("#autopilot-vertical-hold-var").attr('placeholder', autopilot_vertical_hold_var);
+	$("#a320-airspeed-hold-var").attr('placeholder', autopilot_airspeed_hold_var);
+	$("#a320-heading-lock-dir").attr('placeholder', autopilot_heading_lock_dir);
+	$("#a320-altitude-lock-var").attr('placeholder', autopilot_altitude_lock_var);
+	$("#a320-vertical-hold-var").attr('placeholder', autopilot_vertical_hold_var);
 	
 	//NAV Swap
 	$("#ADF_heading").attr('placeholder', adf_card_deg);
@@ -784,9 +758,6 @@ function displayData() {
 	$("#landing-vs3").text(landing_vs3);
 	$("#landing-t3").text(landing_t3);
 	$("#sim-rate").text(sim_rate);
-
-	//Waypoint
-	$("#gps-wp-distance").text("Distance to next waypoint" + " "+ "=" + " " + gps_wp_distance);
 }
 
 function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText="Off") {
