@@ -795,7 +795,7 @@ function displayData() {
 	$("#sim-rate").text(sim_rate);
 
 	//Waypoint
-	$("#gps-wp-distance").text(gps_wp_distance);
+	$("#gps-wp-distance").text("Distance to next waypoint" + " " + "=" + " " + gps_wp_distance);
 
 }
 
