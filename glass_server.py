@@ -113,6 +113,10 @@ def flask_thread_func(threadname):
     
     app.run(host='0.0.0.0', port=4000, debug=False)
 
+def decoderring(todecode):
+    todecode = todecode.decode('utf-8')
+    return todecode
+
 # SimConnect  App
 def simconnect_thread_func(threadname):
     
@@ -218,6 +222,34 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
         ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
         
+                # Waypoints
+        ui_friendly_dictionary["GPS_IS_ACTIVE_FLIGHT_PLAN"] = await aq.get("GPS_IS_ACTIVE_FLIGHT_PLAN")
+        ui_friendly_dictionary["GPS_IS_ACTIVE_WAY_POINT"] = await aq.get("GPS_IS_ACTIVE_WAY_POINT")
+        ui_friendly_dictionary["GPS_WP_DISTANCE"] = round((await aq.get("GPS_WP_DISTANCE") / 1852),2)
+        ui_friendly_dictionary["GPS_WP_CROSS_TRK"] = await aq.get("GPS_WP_CROSS_TRK")
+        ui_friendly_dictionary["GPS_WP_DESIRED_TRACK"] = await aq.get("GPS_WP_DESIRED_TRACK")
+        ui_friendly_dictionary["GPS_ETA"] = await aq.get("GPS_ETA")
+        ui_friendly_dictionary["GPS_WP_NEXT_LAT"] = round(await aq.get("GPS_WP_NEXT_LAT"),6)
+        ui_friendly_dictionary["GPS_WP_NEXT_LON"] = round(await aq.get("GPS_WP_NEXT_LON"),6)
+        ui_friendly_dictionary["GPS_WP_PREV_VALID"] = await aq.get("GPS_WP_PREV_VALID")
+        ui_friendly_dictionary["GPS_WP_PREV_LAT"] = round(await aq.get("GPS_WP_PREV_LAT"),6)
+        ui_friendly_dictionary["GPS_WP_PREV_LON"] = round(await aq.get("GPS_WP_PREV_LON"),6)
+        ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_INDEX"] = await aq.get("GPS_FLIGHT_PLAN_WP_INDEX")
+        ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_COUNT"] = await aq.get("GPS_FLIGHT_PLAN_WP_COUNT")
+        NEXTID = await aq.get("GPS_WP_NEXT_ID")
+        PREVID = await aq.get("GPS_WP_PREV_ID")
+        GPS_WP_NEXT_ID = decoderring(NEXTID)
+        GPS_WP_PREV_ID = decoderring(PREVID)
+        ui_friendly_dictionary["GPS_WP_NEXT_ID"] = GPS_WP_NEXT_ID
+        ui_friendly_dictionary["GPS_WP_PREV_ID"] = GPS_WP_PREV_ID
+        TITLE = await aq.get("TITLE")
+        # AI = await aq.get("AI_WAYPOINT_LIST")
+        # print(AI)
+
+        # CURRENT_FLIGHT = aq.get("CURRENT_FLIGHT")
+        # print(GPS_WP_NEXT_ID)
+
+
         # XPNDR
         xpndr_bcd = await aq.get("TRANSPONDER_CODE:1")
         xpndr_digits = ""
@@ -262,6 +294,7 @@ def simconnect_thread_func(threadname):
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD"] = await aq.get("AUTOPILOT_PITCH_HOLD")
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD_REF"] = await aq.get("AUTOPILOT_PITCH_HOLD_REF")
         ui_friendly_dictionary["AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE"] = await aq.get("AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE")
+
         # Lights
         ui_friendly_dictionary["LIGHT_LANDING"] = await aq.get("LIGHT_LANDING")
         ui_friendly_dictionary["LIGHT_TAXI"] = await aq.get("LIGHT_TAXI")
@@ -282,8 +315,7 @@ def simconnect_thread_func(threadname):
         #ui_friendly_dictionary["PANEL_ANTI_ICE_SWITCH"] = await aq.get("PANEL_ANTI_ICE_SWITCH")
         # Sim Rate
         ui_friendly_dictionary["SIMULATION_RATE"] = await aq.get("SIMULATION_RATE")
-        
-        
+                
         # Current altitude
         current_alt = await aq.get("INDICATED_ALTITUDE")
         if current_alt > -300:
