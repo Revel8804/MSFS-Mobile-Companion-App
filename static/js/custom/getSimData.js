@@ -31,10 +31,10 @@ let nav1_g3000_freq
 let nav2_g3000_freq
 let adf_g3000_freq
 
-let com1_active;
-let com1_standby;
-let com2_active;
-let com2_standby;
+// let com1_active;
+// let com1_standby;
+// let com2_active;
+// let com2_standby;
 
 let xpndr_1000;
 let xpndr_100;
@@ -45,8 +45,8 @@ let xpndr_g3000;
 let com1_g3000_freq;
 let com2_g3000_freq;
 
-let com1_transmit;
-let com2_transmit;
+// let com1_transmit;
+// let com2_transmit;
 
 let autopilot_master;
 let autopilot_nav1_lock;
@@ -119,6 +119,9 @@ let gps_flight_plan_wp_count;
 let gps_wp_next_id;
 let gps_wp_prev_id;
 let gps_target_distance;
+let com_transmit;
+let com_standby;
+let com_active;
 // let title;
 // Maps Size Fix Function
 let map_size_fix;
@@ -670,8 +673,12 @@ function getSimulatorData() {
 		com1_g3000_freq = Number(data.COM1_ACTIVE).toFixed(3);
 		com2_g3000_freq = Number(data.COM2_ACTIVE).toFixed(3);
 		xpndr_g3000 = data.XPNDR;
-		com1_transmit = data.COM1_TRANSMIT;
-		com2_transmit = data.COM2_TRANSMIT;
+		// com1_transmit = data.COM1_TRANSMIT;
+		// com2_transmit = data.COM2_TRANSMIT;
+		com_transmit = data.COM_TRANSMIT;
+		com_standby = data.COM_STANDBY;
+		com_active = data.COM_ACTIVE;
+		console.log(com_active[1]);
 		
 		//Altitude
 		altitude = data.INDICATED_ALTITUDE;
@@ -737,10 +744,10 @@ function displayData() {
     checkAndUpdateButton("#autopilot-vertical-hold", autopilot_vertical_hold);
     checkAndUpdateButton("#autopilot-autothrottle", autopilot_autothrottle);
     checkAndUpdateButton("#autopilot-glideslope-hold", autopilot_glideslope_hold);
-    checkAndUpdateButton("#com1-transmit", com1_transmit, "COM 1 (On)", "COM 1 (Off)");
-    checkAndUpdateButton("#com2-transmit", com2_transmit, "COM 2 (On)", "COM 2 (Off)");
-    checkAndUpdateButton("#com1-transmit-direct", com1_transmit, "Transmit COM 1 (On)", "Transmit COM 1 (Off)");
-    checkAndUpdateButton("#com2-transmit-direct", com2_transmit, "Transmit COM 2 (On)", "Transmit COM 2 (Off)");
+    // checkAndUpdateButton("#com1-transmit", com1_transmit, "COM 1 (On)", "COM 1 (Off)");
+    // checkAndUpdateButton("#com2-transmit", com2_transmit, "COM 2 (On)", "COM 2 (Off)");
+    // checkAndUpdateButton("#com1-transmit-direct", com1_transmit, "Transmit COM 1 (On)", "Transmit COM 1 (Off)");
+    // checkAndUpdateButton("#com2-transmit-direct", com2_transmit, "Transmit COM 2 (On)", "Transmit COM 2 (Off)");
     checkAndUpdateButton("#light-beacon", light_beacon);
     checkAndUpdateButton("#light-landing", light_landing);
     checkAndUpdateButton("#light-taxi", light_taxi);

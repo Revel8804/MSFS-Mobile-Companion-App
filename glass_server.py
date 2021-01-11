@@ -215,14 +215,18 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["NAV2_OBS_DEG"] = round(await aq.get("NAV_OBS:2"),0)
 
         # Comms
-        ui_friendly_dictionary["COM1_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:1"),3)
-        ui_friendly_dictionary["COM1_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:1"),3)
-        ui_friendly_dictionary["COM1_TRANSMIT"] = await aq.get("COM_TRANSMIT:1")
-        ui_friendly_dictionary["COM2_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)
-        ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
-        ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
+        ui_friendly_dictionary["COM_TRANSMIT"] = [await aq.get("COM_TRANSMIT:1"), await aq.get("COM_TRANSMIT:2")]
+        ui_friendly_dictionary["COM_STANDBY"] = [round(await aq.get("COM_STANDBY_FREQUENCY:1"),3), round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)]
+        ui_friendly_dictionary["COM_ACTIVE"] = [round(await aq.get("COM_ACTIVE_FREQUENCY:1"),3), round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)]
+        # ui_friendly_dictionary["COM1_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:1"),3)
+        # ui_friendly_dictionary["COM1_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:1"),3)
+        # ui_friendly_dictionary["COM1_TRANSMIT"] = await aq.get("COM_TRANSMIT:1")
+        # ui_friendly_dictionary["COM2_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)
+        # ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
+        # ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
+
         
-                # Waypoints
+        # Waypoints
         ui_friendly_dictionary["GPS_IS_ACTIVE_FLIGHT_PLAN"] = await aq.get("GPS_IS_ACTIVE_FLIGHT_PLAN")
         ui_friendly_dictionary["GPS_IS_ACTIVE_WAY_POINT"] = await aq.get("GPS_IS_ACTIVE_WAY_POINT")
         ui_friendly_dictionary["GPS_WP_DISTANCE"] = round((await aq.get("GPS_WP_DISTANCE") / 1852),2)
