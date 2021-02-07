@@ -31,10 +31,10 @@ let nav1_g3000_freq
 let nav2_g3000_freq
 let adf_g3000_freq
 
-// let com1_active;
-// let com1_standby;
-// let com2_active;
-// let com2_standby;
+let com1_active;
+let com1_standby;
+let com2_active;
+let com2_standby;
 
 let xpndr_1000;
 let xpndr_100;
@@ -45,8 +45,8 @@ let xpndr_g3000;
 let com1_g3000_freq;
 let com2_g3000_freq;
 
-// let com1_transmit;
-// let com2_transmit;
+let com1_transmit;
+let com2_transmit;
 
 let autopilot_master;
 let autopilot_nav1_lock;
@@ -103,6 +103,14 @@ let light_recognition;
 let pitot_heat;
 let eng_anti_ice;
 let structural_deice;
+
+let fltpln_arr;
+let gps_next_lat;
+let gps_next_lon;
+let gps_next_wp_arr = [[],[]];
+let loadfltpln_switch;
+loadfltpln_switch = 0;
+
 let gps_is_active_flight_plan;
 let gps_is_active_way_point;
 let gps_wp_distance;
@@ -673,8 +681,8 @@ function getSimulatorData() {
 		com1_g3000_freq = Number(data.COM1_ACTIVE).toFixed(3);
 		com2_g3000_freq = Number(data.COM2_ACTIVE).toFixed(3);
 		xpndr_g3000 = data.XPNDR;
-		// com1_transmit = data.COM1_TRANSMIT;
-		// com2_transmit = data.COM2_TRANSMIT;
+		com1_transmit = data.COM1_TRANSMIT;
+		com2_transmit = data.COM2_TRANSMIT;
 		com_transmit = data.COM_TRANSMIT;
 		com_standby = data.COM_STANDBY;
 		com_active = data.COM_ACTIVE;
@@ -706,7 +714,13 @@ function getSimulatorData() {
 		landing_vs3 = data.LANDING_VS3;
 		landing_t3 = data.LANDING_T3;
 		sim_rate = data.SIMULATION_RATE;
-		
+
+		//Flight Plan
+		fltpln_arr = data.FLT_PLN;
+		gps_next_lat = data.NEXT_WP_LAT;
+		gps_next_lon = data.NEXT_WP_LON;
+		gps_next_wp_arr = [[latitude, longitude],[gps_next_lat, gps_next_lon]]
+	
 		//Waypoints
 		gps_is_active_flight_plan = data.GPS_IS_ACTIVE_FLIGHT_PLAN;
         gps_is_active_way_point = data.GPS_IS_ACTIVE_WAY_POINT;
@@ -744,10 +758,10 @@ function displayData() {
     checkAndUpdateButton("#autopilot-vertical-hold", autopilot_vertical_hold);
     checkAndUpdateButton("#autopilot-autothrottle", autopilot_autothrottle);
     checkAndUpdateButton("#autopilot-glideslope-hold", autopilot_glideslope_hold);
-    // checkAndUpdateButton("#com1-transmit", com1_transmit, "COM 1 (On)", "COM 1 (Off)");
-    // checkAndUpdateButton("#com2-transmit", com2_transmit, "COM 2 (On)", "COM 2 (Off)");
-    // checkAndUpdateButton("#com1-transmit-direct", com1_transmit, "Transmit COM 1 (On)", "Transmit COM 1 (Off)");
-    // checkAndUpdateButton("#com2-transmit-direct", com2_transmit, "Transmit COM 2 (On)", "Transmit COM 2 (Off)");
+    checkAndUpdateButton("#com1-transmit", com1_transmit, "COM 1 (On)", "COM 1 (Off)");
+    checkAndUpdateButton("#com2-transmit", com2_transmit, "COM 2 (On)", "COM 2 (Off)");
+    checkAndUpdateButton("#com1-transmit-direct", com1_transmit, "Transmit COM 1 (On)", "Transmit COM 1 (Off)");
+    checkAndUpdateButton("#com2-transmit-direct", com2_transmit, "Transmit COM 2 (On)", "Transmit COM 2 (Off)");
     checkAndUpdateButton("#light-beacon", light_beacon);
     checkAndUpdateButton("#light-landing", light_landing);
     checkAndUpdateButton("#light-taxi", light_taxi);
@@ -817,11 +831,11 @@ function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText=
 function toggleFollowPlane() {
     followPlane = !followPlane;
     if (followPlane === true) {
-        $("#followMode").text("Unfollow plane")
+        $("#followMode").text("Unfollow Plane")
         $("#followModeButton").removeClass("btn-danger").addClass("btn-primary")
     }
     if (followPlane === false) {
-        $("#followMode").text("Follow plane")
+        $("#followMode").text("Follow Plane")
         $("#followModeButton").removeClass("btn-primary").addClass("btn-danger")
     }
 }
@@ -857,8 +871,15 @@ function updateMap() {
     if (tracklinelen > 1) {
         if (trackline.getLatLngs()[tracklinelen - 1].distanceTo(trackline.getLatLngs()[tracklinelen - 2]) > 2000) {
             trackline.setLatLngs([]);
+			// Force Frequecy Sync
+			syncRadio();
         }
     };
+
+    // GPS Next WP Polyline Update
+    if (gps_next_wp_arr[1] != null) {
+        gpswp.setLatLngs(gps_next_wp_arr);
+	}
 }
 
 function refreshMapSize() {
@@ -926,14 +947,14 @@ function triggerCustomEmergency(emergency_type) {
 }
 
 
-function temporaryAlert(title, message, icon) {
+function temporaryAlert(title, message, icon, timer = 1000) {
     let timerInterval
 
     Swal.fire({
         title: title,
         html: message,
         icon: icon,
-        timer: 1000,
+        timer: timer,
         timerProgressBar: true,
         onBeforeOpen: () => {
             Swal.showLoading()
@@ -945,7 +966,7 @@ function temporaryAlert(title, message, icon) {
                         b.textContent = Swal.getTimerLeft()
                     }
                 }
-            }, 1000)
+            }, timer)
         },
         onClose: () => {
             clearInterval(timerInterval)
@@ -960,4 +981,28 @@ function temporaryAlert(title, message, icon) {
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function updatePolylineFltPln() {
+    fltpln.setLatLngs(fltpln_arr);
+}
+
+function loadFltPln() {
+    loadfltpln_switch = (loadfltpln_switch + 1) % 2;
+
+    if (loadfltpln_switch === 1) {
+        temporaryAlert('', "Loading flight plan.", "success", 2500);
+        $("#FltPlnText").text("Hide Flight Plan");
+        $("#FltPlnButton").removeClass("btn-danger").addClass("btn-primary");
+        url_to_call = "/fltpln";
+        $.post (url_to_call);
+        setTimeout(updatePolylineFltPln, 2500);
+        gpswp.setStyle({opacity: 1.0});
+    } else {
+        $("#FltPlnText").text("Load Flight Plan");
+        $("#FltPlnButton").removeClass("btn-primary").addClass("btn-danger");
+        fltpln.setLatLngs([]);
+        gpswp.setStyle({opacity: 0});
+    }
+
 }
