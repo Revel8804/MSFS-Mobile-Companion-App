@@ -25,7 +25,8 @@ def flask_thread_func(threadname):
     global value_to_use
     global sm
     global ae
-    
+    global fltpln
+
     app = Flask(__name__)
     log = logging.getLogger('werkzeug')
     log.disabled = True
@@ -40,6 +41,9 @@ def flask_thread_func(threadname):
     def index():
         return render_template('glass.html')
     
+    @app.route('/landscape')
+    def index_landscape():
+        return render_template('glass_landscape.html')
         
     def trigger_event(event_name, value_to_use=None):
         # This function actually does the work of triggering the event
@@ -109,6 +113,119 @@ def flask_thread_func(threadname):
 
         return jsonify(status)
     
+    # Load Flight Plan
+    fltpln = []
+    @app.route('/fltpln', methods=["POST"])
+    def load_fltpln():
+        # Load Settings - MSFS Install Location
+        try:
+            with open('settings.txt', 'r') as settings:
+                lines = settings.readlines()
+
+            # Get Flight Plan
+            fltpln_dir = ""
+            for line in lines:
+                if len(line)>0:
+                    if line[0] != "#":
+                        fltpln_dir = line
+                        # Check to delete \ at the endswith
+                        if fltpln_dir[-1] == "\\":
+                            fltpln_dir = fltpln_dir[:-1]
+                        break
+            
+            try:
+                # MS Store
+                fltpln_dir = fltpln_dir + "\LocalState\MISSIONS\Custom\CustomFlight\CUSTOMFLIGHT.FLT"
+                with open(fltpln_dir, 'r') as fltpln:
+                    fltpln_lines = fltpln.readlines()
+            except:
+                # Steam
+                fltpln_dir = fltpln_dir + "\MISSIONS\Custom\CustomFlight\CUSTOMFLIGHT.FLT"
+                with open(fltpln_dir, 'r') as fltpln:
+                    fltpln_lines = fltpln.readlines()
+
+            # Process Flight Plan Function
+            def latlong_dec_convert(to_convert):
+                """Function converts deg/min/sec to decimal"""
+                elements = to_convert.split(" ")
+                conversion = 0
+                for element in elements:
+                    # Degrees Conversion
+                    if element[-1] == "°":
+                        conversion = conversion + float(element[1:-1])
+                        continue
+                    # Minutes Conversion
+                    if element[-1] == "'":
+                        conversion = conversion + (float(element[0:-1])/60)
+                        continue
+                    # Seconds Conversion
+                    if element[-1] == '"':
+                        conversion = conversion + (float(element[0:-1])/3600)
+                        continue
+                   
+                # Degrees Conversion Negative/Positive
+                if elements[0][0] in ["W","S"]:
+                    conversion = conversion * (-1)
+                    
+                return conversion
+
+            # Check if ATC_RequestedFlightPlan
+            atc_reqfltpln = False
+            for idx, line in enumerate(fltpln_lines):
+                if line.find("[ATC_RequestedFlightPlan.0]") >= 0:
+                    atc_reqfltpln = True
+                    fltpln_lines = fltpln_lines[(idx + 1):]
+                    break
+            
+            #Process FLT file
+            if atc_reqfltpln == False:
+                # For VFR Flights
+                # Get No of Waypoints
+                no_wpts = 0
+                for line in fltpln_lines:
+                    if line.find("NumberofWaypoints=") >= 0:
+                        no_wpts = int(line.split("=")[1])
+                        break
+                
+                # Get LatLong for Waypoitns
+                fltpln_arr = []
+                wpts_processed = 0
+                for line in fltpln_lines:
+                    if wpts_processed < no_wpts:
+                        if line.find("Waypoint.") >= 0:
+                            line_elements = line.split(",")
+                            fltpln_wp = [latlong_dec_convert(line_elements[5].strip()),latlong_dec_convert(line_elements[6].strip())]
+                            fltpln_arr.append(fltpln_wp)
+                            wpts_processed = wpts_processed + 1
+                    else:
+                        break
+                        
+            else:
+                # For IFR Flights
+                fltpln_arr = []
+                wpt_id = False
+                for line in fltpln_lines:
+                    if line.find("waypoint.") >= 0:
+                        line_elements = line.split(",")
+                        fltpln_wp = [latlong_dec_convert(line_elements[5].strip()),latlong_dec_convert(line_elements[6].strip())]
+                        fltpln_arr.append(fltpln_wp)
+                        wpt_id = True
+                    else:
+                        if wpt_id == True:
+                            break
+
+            ui_friendly_dictionary["FLT_PLN"] = fltpln_arr
+
+            success = "Flight plan loaded"
+
+        except:
+            print("Error loading flight plan. Make sure you have the correct MSFS installation path in settings.txt.")
+            success = "Error loading flight plan"
+        
+        return success
+    
+    app.run(host='0.0.0.0', port=4000, debug=False)
+
     
     
     app.run(host='0.0.0.0', port=4000, debug=False)
@@ -215,15 +332,12 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["NAV2_OBS_DEG"] = round(await aq.get("NAV_OBS:2"),0)
 
         # Comms
-        ui_friendly_dictionary["COM_TRANSMIT"] = [await aq.get("COM_TRANSMIT:1"), await aq.get("COM_TRANSMIT:2")]
-        ui_friendly_dictionary["COM_STANDBY"] = [round(await aq.get("COM_STANDBY_FREQUENCY:1"),3), round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)]
-        ui_friendly_dictionary["COM_ACTIVE"] = [round(await aq.get("COM_ACTIVE_FREQUENCY:1"),3), round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)]
-        # ui_friendly_dictionary["COM1_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:1"),3)
-        # ui_friendly_dictionary["COM1_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:1"),3)
-        # ui_friendly_dictionary["COM1_TRANSMIT"] = await aq.get("COM_TRANSMIT:1")
-        # ui_friendly_dictionary["COM2_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)
-        # ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
-        # ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
+        ui_friendly_dictionary["COM1_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:1"),3)
+        ui_friendly_dictionary["COM1_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:1"),3)
+        ui_friendly_dictionary["COM1_TRANSMIT"] = await aq.get("COM_TRANSMIT:1")
+        ui_friendly_dictionary["COM2_STANDBY"] = round(await aq.get("COM_STANDBY_FREQUENCY:2"),3)
+        ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
+        ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
 
         
         # Waypoints
@@ -313,6 +427,9 @@ def simconnect_thread_func(threadname):
         #ui_friendly_dictionary["PANEL_ANTI_ICE_SWITCH"] = await aq.get("PANEL_ANTI_ICE_SWITCH")
         # Sim Rate
         ui_friendly_dictionary["SIMULATION_RATE"] = await aq.get("SIMULATION_RATE")
+        # GPS Next Waypoint
+        ui_friendly_dictionary["NEXT_WP_LAT"] = await aq.get("GPS_WP_NEXT_LAT")
+        ui_friendly_dictionary["NEXT_WP_LON"] = await aq.get("GPS_WP_NEXT_LON")
                 
         # Current altitude
         current_alt = await aq.get("INDICATED_ALTITUDE")
