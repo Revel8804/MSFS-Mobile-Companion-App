@@ -1,4 +1,5 @@
 let altitude;
+let indicated_altitude;
 let fuel_percentage;
 let vertical_speed;
 let compass;
@@ -686,11 +687,10 @@ function getSimulatorData() {
 		com_transmit = data.COM_TRANSMIT;
 		com_standby = data.COM_STANDBY;
 		com_active = data.COM_ACTIVE;
-		console.log(com_active[1]);
 		
 		//Altitude
 		altitude = data.INDICATED_ALTITUDE;
-		
+				
 		//Panel
 		light_landing = data.LIGHT_LANDING;
 		light_taxi = data.LIGHT_TAXI;
@@ -738,6 +738,7 @@ function getSimulatorData() {
         gps_wp_next_id = data.GPS_WP_NEXT_ID;
         gps_wp_prev_id = data.GPS_WP_PREV_ID;
         gps_target_distance = data.GPS_TARGET_DISTANCE;
+		// console.log(gps_wp_distance);
 		// title = data.TITLE;
     });
     return false;
@@ -806,6 +807,10 @@ function displayData() {
 	$("#COM2_freq").attr('placeholder', com2_g3000_freq);
 	$("#XPNDR_g3000").attr('placeholder', xpndr_g3000);
 	
+	//Flight Data
+	$("#altitude").text(altitude);
+	
+
 	//Other
 	$("#landing-vs1").text(landing_vs1);
 	$("#landing-t1").text(landing_t1);
