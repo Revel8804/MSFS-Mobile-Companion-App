@@ -456,7 +456,8 @@ def simconnect_thread_func(threadname):
             None
         
         # Flight Data
-        ui_friendly_dictionary["PLANE_ALT_ABOVE_GROUND"] = await aq.get("PLANE_ALT_ABOVE_GROUND")
+        ui_friendly_dictionary["PLANE_ALT_ABOVE_GROUND"] = round(await aq.get("PLANE_ALT_ABOVE_GROUND"),0)
+        ui_friendly_dictionary["GPS_WP_PREV_LON"] = round(await aq.get("GPS_WP_PREV_LON"),6)
         
         # Other
         
