@@ -4,6 +4,7 @@ let fuel_percentage;
 let vertical_speed;
 let compass;
 let airspeed;
+let airspeed_true;
 let latitude;
 latitude = 0;
 let longitude;
@@ -709,6 +710,8 @@ function getSimulatorData() {
 		
 		//Flight Data
 		plane_alt_above_ground = data.PLANE_ALT_ABOVE_GROUND;
+		airspeed_true = data.AIRSPEED_TRUE;
+
 		//Other
 		landing_vs1 = data.LANDING_VS1;
 		landing_t1 = data.LANDING_T1;
@@ -813,8 +816,10 @@ function displayData() {
 	//Flight Data
 	$("#altitude").text(altitude);
 	$("#agl").text(plane_alt_above_ground);
+	$("#indicated-speed").text(airspeed_indicated);
+	$("#airspeed-true").text(airspeed_true);
+	$("#XPNDR_g3000").attr('placeholder', xpndr_g3000);
 	
-
 	//Other
 	$("#landing-vs1").text(landing_vs1);
 	$("#landing-t1").text(landing_t1);
