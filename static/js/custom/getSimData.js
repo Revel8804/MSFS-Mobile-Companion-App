@@ -136,6 +136,7 @@ let com_active;
 let map_size_fix;
 let map_size_fix_mod;
 map_size_fix = 0;
+let plane_alt_above_ground;
 
 function mapRefreshFix() {
 	map_size_fix = map_size_fix + 1;
@@ -706,6 +707,8 @@ function getSimulatorData() {
 		eng_anti_ice = data.ENG_ANTI_ICE;
 		structural_deice = data.STRUCTURAL_DEICE_SWITCH;
 		
+		//Flight Data
+		plane_alt_above_ground = data.PLANE_ALT_ABOVE_GROUND;
 		//Other
 		landing_vs1 = data.LANDING_VS1;
 		landing_t1 = data.LANDING_T1;
@@ -809,6 +812,7 @@ function displayData() {
 	
 	//Flight Data
 	$("#altitude").text(altitude);
+	$("#agl").text(plane_alt_above_ground);
 	
 
 	//Other
