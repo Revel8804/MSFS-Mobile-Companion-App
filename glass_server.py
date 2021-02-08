@@ -455,6 +455,9 @@ def simconnect_thread_func(threadname):
         except:
             None
         
+        # Flight Data
+        ui_friendly_dictionary["PLANE_ALT_ABOVE_GROUND"] = await aq.get("PLANE_ALT_ABOVE_GROUND")
+        
         # Other
         
         current_landing = round(await aq.get("PLANE_TOUCHDOWN_NORMAL_VELOCITY") * 60)
