@@ -121,7 +121,8 @@ let com_transmit;
 let com_standby;
 let com_active;
 // let title;
-
+let airspeed_true;
+let plane_alt_above_ground;
 
 let fltpln_arr;
 let gps_next_lat;
@@ -731,7 +732,11 @@ function getSimulatorData() {
 		gps_wp_next_id = data.GPS_WP_NEXT_ID;
 		gps_wp_prev_id = data.GPS_WP_PREV_ID;
 		gps_target_distance = data.GPS_TARGET_DISTANCE;
-		// title = data.TITLE;		
+		// title = data.TITLE;	
+		
+		//Flight Data
+		airspeed_true = data.AIRSPEED_TRUE;
+		plane_alt_above_ground = data.PLANE_ALT_ABOVE_GROUND;
     });
     return false;
 }
@@ -810,6 +815,10 @@ function displayData() {
 	
 	//Waypoint
 	$("#gps-wp-distance").text("Distance to next waypoint" + " " + "=" + " " + gps_wp_distance);
+
+	//Flight Data
+	$("#airspeed_true").text(airspeed_true)
+	$("#plane_alt_above_ground").text(plane_alt_above_ground)
 }
 
 function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText="Off") {
