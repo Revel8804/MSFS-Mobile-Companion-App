@@ -817,8 +817,10 @@ function displayData() {
 	$("#gps-wp-distance").text("Distance to next waypoint" + " " + "=" + " " + gps_wp_distance);
 
 	//Flight Data
-	$("#airspeed_true").text(airspeed_true)
-	$("#plane_alt_above_ground").text(plane_alt_above_ground)
+	$("#altitude").text(altitude)
+	$("#airspeed-true").text(airspeed_true)
+	$("#plane-alt-above-ground").text(plane_alt_above_ground)
+	$("#airspeed-indicated").text(airspeed_indicated)
 }
 
 function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText="Off") {
