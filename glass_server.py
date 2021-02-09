@@ -226,6 +226,11 @@ def flask_thread_func(threadname):
     
     app.run(host='0.0.0.0', port=4000, debug=False)
 
+def decoderring(todecode):
+    todecode = todecode.decode('utf-8')
+    return todecode
+
+
 # SimConnect  App
 def simconnect_thread_func(threadname):
     
@@ -375,6 +380,7 @@ def simconnect_thread_func(threadname):
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD"] = await aq.get("AUTOPILOT_PITCH_HOLD")
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD_REF"] = await aq.get("AUTOPILOT_PITCH_HOLD_REF")
         ui_friendly_dictionary["AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE"] = await aq.get("AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE")
+        
         # Lights
         ui_friendly_dictionary["LIGHT_LANDING"] = await aq.get("LIGHT_LANDING")
         ui_friendly_dictionary["LIGHT_TAXI"] = await aq.get("LIGHT_TAXI")
