@@ -810,6 +810,7 @@ function displayData() {
 	
 	//Waypoint
 	$("#gps-wp-distance").text("Distance to next waypoint" + " " + "=" + " " + gps_wp_distance);
+	console.log(gps_wp_distance);
 
 }
 
