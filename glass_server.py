@@ -401,6 +401,10 @@ def simconnect_thread_func(threadname):
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD_REF"] = await aq.get("AUTOPILOT_PITCH_HOLD_REF")
         ui_friendly_dictionary["AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE"] = await aq.get("AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE")
         
+        # Flight Data
+        ui_friendly_dictionary["AIRSPEED_TRUE"] = round(await aq.get("AIRSPEED_TRUE"))
+        ui_friendly_dictionary["PLANE_ALT_ABOVE_GROUND"] = round(await aq.get("PLANE_ALT_ABOVE_GROUND"))
+        
         # Lights
         ui_friendly_dictionary["LIGHT_LANDING"] = await aq.get("LIGHT_LANDING")
         ui_friendly_dictionary["LIGHT_TAXI"] = await aq.get("LIGHT_TAXI")
