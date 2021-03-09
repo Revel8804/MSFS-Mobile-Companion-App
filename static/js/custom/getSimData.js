@@ -103,6 +103,26 @@ let light_recognition;
 let pitot_heat;
 let eng_anti_ice;
 let structural_deice;
+let gps_is_active_flight_plan;
+let gps_is_active_way_point;
+let gps_wp_distance;
+let gps_wp_cross_trk;
+let gps_wp_desired_track;
+let gps_eta;
+let gps_wp_prev_valid;
+let gps_wp_prev_lat;
+let gps_wp_prev_lon;
+let gps_flight_plan_wp_index;
+let gps_flight_plan_wp_count;
+let gps_wp_next_id;
+let gps_wp_prev_id;
+let gps_target_distance;
+let com_transmit;
+let com_standby;
+let com_active;
+// let title;
+let airspeed_true;
+let plane_alt_above_ground;
 
 let fltpln_arr;
 let gps_next_lat;
@@ -696,6 +716,27 @@ function getSimulatorData() {
 		gps_next_lat = data.NEXT_WP_LAT;
 		gps_next_lon = data.NEXT_WP_LON;
 		gps_next_wp_arr = [[latitude, longitude],[gps_next_lat, gps_next_lon]]
+
+		//Waypoints
+		gps_is_active_flight_plan = data.GPS_IS_ACTIVE_FLIGHT_PLAN;
+		gps_is_active_way_point = data.GPS_IS_ACTIVE_WAY_POINT;
+		gps_wp_distance = data.GPS_WP_DISTANCE;
+		gps_wp_cross_trk = data.GPS_WP_CROSS_TRK;
+		gps_wp_desired_track = data.GPS_WP_DESIRED_TRACK;
+		gps_eta = data.GPS_ETA;
+		gps_wp_prev_valid = data.GPS_WP_PREV_VALID;
+		gps_wp_prev_lat = data.GPS_WP_PREV_LAT;
+		gps_wp_prev_lon = data.GPS_WP_PREV_LON;
+		gps_flight_plan_wp_index = data.GPS_FLIGHT_PLAN_WP_INDEX;
+		gps_flight_plan_wp_count = data.GPS_FLIGHT_PLAN_WP_COUNT;
+		gps_wp_next_id = data.GPS_WP_NEXT_ID;
+		gps_wp_prev_id = data.GPS_WP_PREV_ID;
+		gps_target_distance = data.GPS_TARGET_DISTANCE;
+		// title = data.TITLE;	
+		
+		//Flight Data
+		airspeed_true = data.AIRSPEED_TRUE;
+		plane_alt_above_ground = data.PLANE_ALT_ABOVE_GROUND;
     });
     return false;
 }
@@ -771,6 +812,15 @@ function displayData() {
 	$("#landing-vs3").text(landing_vs3);
 	$("#landing-t3").text(landing_t3);
 	$("#sim-rate").text(sim_rate);
+	
+	//Waypoint
+	$("#gps-wp-distance").text("Distance to next waypoint" + " " + "=" + " " + gps_wp_distance);
+
+	//Flight Data
+	$("#altitude").text(altitude)
+	$("#airspeed-true").text(airspeed_true)
+	$("#plane-alt-above-ground").text(plane_alt_above_ground)
+	$("#airspeed-indicated").text(airspeed_indicated)
 }
 
 function checkAndUpdateButton(buttonName, variableToCheck, onText="On", offText="Off") {
