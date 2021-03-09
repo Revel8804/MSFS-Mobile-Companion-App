@@ -1,3 +1,4 @@
 #Folders to ignore
 SimConnect/__pycache__
 test*.*
+settings.txt
