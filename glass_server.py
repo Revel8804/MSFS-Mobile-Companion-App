@@ -121,22 +121,7 @@ def flask_thread_func(threadname):
     def load_fltpln():
         # Load Settings - MSFS Install Location
         try:
-            # with open('settings.txt', 'r') as settings:
-            #     lines = settings.readlines()
-
-            # # Get Flight Plan
-            # fltpln_dir = ""
-            # print(lines)
-            # for line in lines:
-            #     if len(line)>0:
-            #         if line[0] != "#":
-            #             fltpln_dir = line
-            #             # Check to delete \ at the endswith
-            #             if fltpln_dir[-1] == "\\":
-            #                 fltpln_dir = fltpln_dir[:-1]
-            #             break
             fltpln_dir = localappdata + "\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe"
-            print(fltpln_dir)
             try:
                 # MS Store
                 fltpln_dir_full = fltpln_dir + "\LocalState\MISSIONS\Custom\CustomFlight\CUSTOMFLIGHT.FLT"
