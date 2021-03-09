@@ -226,6 +226,10 @@ def flask_thread_func(threadname):
     
     app.run(host='0.0.0.0', port=4000, debug=False)
 
+def decoderring(todecode):
+    todecode = todecode.decode('utf-8')
+    return todecode
+
 # SimConnect  App
 def simconnect_thread_func(threadname):
     
@@ -331,6 +335,26 @@ def simconnect_thread_func(threadname):
         ui_friendly_dictionary["COM2_ACTIVE"] = round(await aq.get("COM_ACTIVE_FREQUENCY:2"),3)
         ui_friendly_dictionary["COM2_TRANSMIT"] = await aq.get("COM_TRANSMIT:2")
         
+        # Waypoints
+        ui_friendly_dictionary["GPS_IS_ACTIVE_FLIGHT_PLAN"] = await aq.get("GPS_IS_ACTIVE_FLIGHT_PLAN")
+        ui_friendly_dictionary["GPS_IS_ACTIVE_WAY_POINT"] = await aq.get("GPS_IS_ACTIVE_WAY_POINT")
+        ui_friendly_dictionary["GPS_WP_DISTANCE"] = round((await aq.get("GPS_WP_DISTANCE") / 1852),2)
+        ui_friendly_dictionary["GPS_WP_CROSS_TRK"] = await aq.get("GPS_WP_CROSS_TRK")
+        ui_friendly_dictionary["GPS_WP_DESIRED_TRACK"] = await aq.get("GPS_WP_DESIRED_TRACK")
+        ui_friendly_dictionary["GPS_ETA"] = await aq.get("GPS_ETA")
+        ui_friendly_dictionary["GPS_WP_PREV_VALID"] = await aq.get("GPS_WP_PREV_VALID")
+        ui_friendly_dictionary["GPS_WP_PREV_LAT"] = round(await aq.get("GPS_WP_PREV_LAT"),6)
+        ui_friendly_dictionary["GPS_WP_PREV_LON"] = round(await aq.get("GPS_WP_PREV_LON"),6)
+        ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_INDEX"] = await aq.get("GPS_FLIGHT_PLAN_WP_INDEX")
+        ui_friendly_dictionary["GPS_FLIGHT_PLAN_WP_COUNT"] = await aq.get("GPS_FLIGHT_PLAN_WP_COUNT")
+        # ui_friendly_dictionary["TITLE"] = await aq.get("TITLE")
+        NEXTID = await aq.get("GPS_WP_NEXT_ID")
+        PREVID = await aq.get("GPS_WP_PREV_ID")
+        GPS_WP_NEXT_ID = decoderring(NEXTID)
+        GPS_WP_PREV_ID = decoderring(PREVID)
+        ui_friendly_dictionary["GPS_WP_NEXT_ID"] = GPS_WP_NEXT_ID
+        ui_friendly_dictionary["GPS_WP_PREV_ID"] = GPS_WP_PREV_ID
+
         # XPNDR
         xpndr_bcd = await aq.get("TRANSPONDER_CODE:1")
         xpndr_digits = ""
@@ -375,6 +399,11 @@ def simconnect_thread_func(threadname):
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD"] = await aq.get("AUTOPILOT_PITCH_HOLD")
         #ui_friendly_dictionary["AUTOPILOT_PITCH_HOLD_REF"] = await aq.get("AUTOPILOT_PITCH_HOLD_REF")
         ui_friendly_dictionary["AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE"] = await aq.get("AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE")
+        
+        # Flight Data
+        ui_friendly_dictionary["AIRSPEED_TRUE"] = round(await aq.get("AIRSPEED_TRUE"))
+        ui_friendly_dictionary["PLANE_ALT_ABOVE_GROUND"] = round(await aq.get("PLANE_ALT_ABOVE_GROUND"))
+        
         # Lights
         ui_friendly_dictionary["LIGHT_LANDING"] = await aq.get("LIGHT_LANDING")
         ui_friendly_dictionary["LIGHT_TAXI"] = await aq.get("LIGHT_TAXI")
